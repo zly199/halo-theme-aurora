@@ -28,10 +28,10 @@ spec:
       formSchema:
         - $formkit: attachment
           name: default_img
-          value: /themes/theme-aurora/assets/img/default-cover.jpg
+          value: /themes/theme-aurora-new/assets/img/default-cover.jpg
           label: 默认背景图
           placeholder: 请填写背景图地址
-          help: 下方选项为空时的默认图，可填写随机图地址，默认为 /themes/theme-aurora/assets/img/default-cover.jpg ，文章及自定义页面的背景图与其封面图一致
+          help: 下方选项为空时的默认图，可填写随机图地址，默认为 /themes/theme-aurora-new/assets/img/default-cover.jpg ，文章及自定义页面的背景图与其封面图一致
         - $formkit: attachment
           name: index_img
           label: 首页顶部背景图
@@ -103,10 +103,10 @@ spec:
       formSchema:
         - $formkit: attachment
           name: default_img
-          value: /themes/theme-aurora/assets/img/default-cover.jpg
+          value: /themes/theme-aurora-new/assets/img/default-cover.jpg
           label: 默认封面图
           placeholder: 请填写封面图地址
-          help: 文章封面图为空时的默认图，可填写随机图地址，默认为 /themes/theme-aurora/assets/img/default-cover.jpg ，文章及自定义页面的背景图与其封面图一致
+          help: 文章封面图为空时的默认图，可填写随机图地址，默认为 /themes/theme-aurora/assets-new/img/default-cover.jpg ，文章及自定义页面的背景图与其封面图一致
         - $formkit: number
           name: index_number
           label: 首页文章列表每列显示数量

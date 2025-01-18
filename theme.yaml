@@ -1,9 +1,9 @@
 apiVersion: theme.halo.run/v1alpha1
 kind: Theme
 metadata:
-  name: theme-aurora
+  name: theme-aurora-new
 spec:
-  displayName: Aurora
+  displayName: Aurora-new
   author:
     name: Roozen
     website: https://roozen.top
@@ -13,5 +13,5 @@ spec:
   repo: https://github.com/Roozenlz/halo-theme-aurora
   settingName: "theme-aurora-setting"
   configMapName: "theme-aurora-configMap"
-  version: "1.0.3"
+  version: "1.0.3-z"
   require: ">=2.8.0"

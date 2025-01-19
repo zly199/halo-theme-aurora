@@ -5,7 +5,7 @@
                 background: linear-gradient(130deg, rgb(36, 198, 220), rgb(84, 51, 255) 41.07%, rgb(255, 0, 153) 76.05%);
             }
         </style>
-        <ul id="post_tab" th:if="${type=='tag'}" th:with="tags = ${tagFinder.listAll()}" class="tab"
+        <ul id="post_tab" th:if="${type=='tag'}" th:with="tags = ${tagFinder.listAll()}" class="tab expanded-tab"
             style="z-index: 9;">
             <li onclick="javascript:window.location.href='/#article-list'" th:classappend="${tag==null}?'active':''">
                 <span class="tab-span first-tab" style="">全部</span>
@@ -30,7 +30,7 @@
                     th:text="${categoryItem.status.postCount}"></b>
             </li>
         </ul>
-        <span onclick="expandHandler()" id="expander" class="tab-expander" style="z-index: 999;">
+        <span onclick="expandHandler()" id="expander" class="tab-expander expanded" style="z-index: 999;">
             <svg class="svg-icon">
                 <use href="#icon-chevron" fill="currentColor"
                      stroke="var(--background-primary)"></use>

@@ -3,12 +3,11 @@
 <!-- 
     分页模块
 
-    @param  path       '/path/page/n' 中的 `/path` 需要保留 `/`
     @param  pageInfo   Halo类型UrlContextListResult<ListedPostVo>
  -->
 <div class="paginator" th:fragment="page(path,pageInfo)">
     <ul>
-        <a th:if="${pageInfo.hasPrevious}" th:href="${pageInfo.prevUrl}">
+        <a th:if="${pageInfo.hasPrevious}" th:href="${pageInfo.prevUrl != '/' ? pageInfo.prevUrl : '/page/1'}">
             <li class="text-ob-bright">
                 <svg class="svg-icon">
                     <use href="#icon-arrow-left" fill="currentColor" stroke="var(--background-primary)"></use>
@@ -19,7 +18,7 @@
 
         <!-- 页码按钮 -->
         <th:block th:if="${pageInfo.page > 3}">
-            <a class="page-number" th:href="${path+'/page/1'}">
+            <a class="page-number" th:href="${pageInfo.prevUrl != '/' ? pageInfo.prevUrl.split('/page/')[0]+'/page/1' : '/page/1'}">
                 <li class="" th:text="1"></li>
             </a>
             <li class="" th:if="${pageInfo.page != 4}">…</li>
@@ -28,14 +27,14 @@
         <th:block th:each="index:${#numbers.sequence(pageInfo.page-2,pageInfo.page+2)}">
             <li class="active" th:if="${pageInfo.page} == ${index}" th:text="${pageInfo.page}"></li>
             <a th:unless="${pageInfo.page == index}" th:if="${index > 0 && index <= pageInfo.totalPages}"
-               th:href="${path+'/page/'+index}">
+               th:href="${pageInfo.prevUrl != '/' ? pageInfo.prevUrl.split('/page/')[0]+'/page/'+index : '/page/'+index}">
                 <li th:text="${index}"></li>
             </a>
         </th:block>
 
         <th:block th:if="${pageInfo.totalPages - pageInfo.page > 2}">
             <li class="" th:if="${pageInfo.totalPages - pageInfo.page != 3}">…</li>
-            <a th:href="${path+'/page/'+pageInfo.totalPages}">
+            <a th:href="${pageInfo.prevUrl != '/' ? pageInfo.prevUrl.split('/page/')[0]+'/page/'+pageInfo.totalPages : '/page/'+pageInfo.totalPages}">
                 <li th:text="${pageInfo.totalPages}"></li>
             </a>
         </th:block>

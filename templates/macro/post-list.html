@@ -38,18 +38,18 @@
         </span>
         <script>
             const expander = document.getElementById('expander');
-            const tab = document.getElementById('post_tab')
+            const tab = document.getElementById('post_tab');
 
             function expandHandler() {
                 if (tab.classList.contains('expanded-tab')) {
-                    tab.classList.remove('expanded-tab')
+                    tab.classList.remove('expanded-tab');
                 } else {
-                    tab.classList.add('expanded-tab')
+                    tab.classList.add('expanded-tab');
                 }
                 if (expander.classList.contains('expanded')) {
-                    expander.classList.remove('expanded')
+                    expander.classList.remove('expanded');
                 } else {
-                    expander.classList.add('expanded')
+                    expander.classList.add('expanded');
                 }
             }
 
@@ -58,7 +58,8 @@
             }
 
             document.addEventListener('DOMContentLoaded', () => {
-                if (tab) {
+                const url = window.location.href;
+                if (tab && (!url.includes('/page/') || url.includes('/page/1'))) {
                     tab.classList.add('expanded-tab'); // 确保初始展开
                 }
             });

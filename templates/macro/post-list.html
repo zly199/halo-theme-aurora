@@ -56,6 +56,12 @@
             function go(to) {
                 window.location.href = to;
             }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                if (tab) {
+                    tab.classList.add('expanded-tab'); // 确保初始展开
+                }
+            });
         </script>
         <ul id="post-cols" th:class="${'grid grid-cols-'+colNum+' gap-8'}">
             <th:block th:each="post : ${posts.items}">

@@ -34,6 +34,16 @@
                             </span>
                         </div>
                         <th:block th:replace="~{macro/post-stats :: post-stats(${post})}"/>
+                        <div id="end" style="margin-left: auto;">
+                            <!-- 点赞按钮 -->
+                            <span id="upvote-btn" style="justify-content: flex-end; color: white; cursor: pointer; display: flex; align-items: center; gap: 4px;"
+                                  th:onclick="handleUpvote([[${post.metadata.name}]])">
+                                <i class="roozenfont roozen-heartbeat" id="upvote-icon"></i>
+                                <span id="upvote-id" class="opacity-70" th:text="${post.stats?.upvote ?: 0}"></span>
+                                <span id="upvote-text" style="font-size: 0.9em;">点个赞</span>
+                            </span>
+                        </div>
+                        <div id="upvote-warning" style="color: white; display: none; font-size: 0.9em; margin-top: 4px;">[点了]</div>
                     </div>
                 </div>
             </div>
@@ -87,7 +97,76 @@
             </div>
         </div>
     </div>
+    <script>
+        var storageKey = "halo.upvoted.post.names";
+
+        function getUpvotedNames() {
+            return JSON.parse(localStorage.getItem(storageKey) || "[]");
+        }
+
+        function updateUpvoteDisplay(name) {
+            var upvotedNames = getUpvotedNames();
+            var upvoteIcon = document.getElementById("upvote-icon");
+
+            if (upvotedNames.includes(name)) {
+                upvoteIcon.style.color = "red";
+            } else {
+                upvoteIcon.style.color = "white";
+            }
+        }
+
+        function handleUpvote(name) {
+            var upvotedNames = getUpvotedNames();
+
+            // 如果已点赞则直接返回
+            if (upvotedNames.includes(name)) {
+                var warningEl = document.getElementById("upvote-warning");
+                warningEl.style.display = "block";
+                setTimeout(() => {
+                    warningEl.style.display = "none";
+                }, 2000);
+                return;
+            }
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/apis/api.halo.run/v1alpha1/trackers/upvote", true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        // 成功后，记录点赞
+                        upvotedNames.push(name);
+                        localStorage.setItem(storageKey, JSON.stringify(upvotedNames));
+
+                        // 更新显示的点赞数
+                        var spanEl = document.getElementById("upvote-id");
+                        var currentCount = parseInt(spanEl.textContent.trim(), 10) || 0;
+                        spanEl.textContent = currentCount + 1;
+
+                        // 更新按钮样式
+                        updateUpvoteDisplay(name);
+                    } else {
+                        alert("网络错误，请稍后再试。");
+                        console.error("点赞请求失败：", xhr.statusText);
+                    }
+                }
+            };
+
+            var postData = {
+                group: "content.halo.run",    // 根据实际情况调整
+                plural: "posts",  // 根据实际情况调整
+                name: name
+            };
+
+            xhr.send(JSON.stringify(postData));
+        }
+
+        // 初始化按钮状态
+        document.addEventListener("DOMContentLoaded", function () {
+            var postName = "[[${post.metadata.name}]]"; // 获取当前文章的 name
+            updateUpvoteDisplay(postName);
+        });
+    </script>
 </th:block>
 </html>
-
-

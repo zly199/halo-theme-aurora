@@ -147,7 +147,7 @@ spec:
         - $formkit: group
           name: widgets
           label: 侧边栏内容
-          help: 目前提供的小部件有：profile（站点资料）, comments（最新评论）, tags（文章标签）。你可以随意组合或排序，以逗号隔开。
+          help: 目前提供的小部件有：profile（站点资料）, comments（最新评论）, tags（文章标签）,categories(分类),popular-posts(最热文章)。你可以随意组合或排序，以逗号隔开。
           value:
             indexWidgets: profile,tags,comments
             postWidgets: profile,toc

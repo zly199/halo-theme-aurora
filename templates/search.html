@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org"
+      th:replace="~{layout :: html(htmlType = 'tag',content = ~{::content},title = ${'搜索' + ' | ' + site.title})}">
+<th:block th:fragment="content">
+<!--    统一导航-->
+    <th:block th:replace="~{macro/app-banner :: app-banner(img=${theme.config.top.tag_img})}"/>
+
+    <div class="relative z-10">
+        <div class="block">
+            测试
+        </div>
+    </div>
+
+</th:block>
+
+</html>

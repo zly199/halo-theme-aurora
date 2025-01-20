@@ -9,12 +9,16 @@
                 <div class="post-header">
                     <span class="post-labels" style="z-index: 999">
                         <b th:each="category : ${post.categories}">
-                            <span style="font-weight: bold;font-size: larger"
-                                  th:text="${category.spec.displayName}"></span>
+                            <a th:href="${category.status.permalink}" style="font-weight: bold; font-size: larger"
+                               th:text="${category.spec.displayName}"></a>
                         </b>
                         <ul>
                             <li th:each="tag : ${post.tags}">
-                                <em class="opacity-50">#</em> [[${tag.spec.displayName}]]</li>
+                                <a th:href="${tag.status.permalink}" style="text-decoration: none;">
+                                    <em class="opacity-50">#</em>
+                                    <span th:text="${tag.spec.displayName}"></span>
+                                </a>
+                            </li>
                         </ul>
                     </span>
                     <h1 class="post-title text-white" th:text="${post.spec.title}"></h1>

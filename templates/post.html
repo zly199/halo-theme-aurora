@@ -52,38 +52,22 @@
                     <article id="article-container" th:class="'post-html  post-content  ' + ${ theme.config.code.enable_line || pluginFinder.available('PluginPrismJS') ? 'line-numbers' : ''}"
                              th:utext="${post.content.content}"></article>
 
-                    <div class="flex flex-col lg:flex-row justify-start items-end my-8"
-                         th:with="postCursor = ${postFinder.cursor(post.metadata.name)}">
-                        <div th:if="${postCursor.hasPrevious()}"
-                             class="w-full h-full self-stretch mr-0 lg:mr-4">
-                            <p class="relative flex items-center pb-2 mb-4 text-xl text-ob-bright uppercase">
-                                <svg class="svg-icon inline-block mr-2 inline-block mr-2"
-                                     style="height: 1em; width: 1em;">
-                                    <use href="#icon-arrow-left-circle" fill="currentColor"
-                                         stroke="var(--background-primary)"></use>
-                                </svg>
-                                <span class="w-full block">上一篇更回味</span>
-                                <span class="absolute bottom-0 h-1 w-14 rounded-full"
-                                      style="background: linear-gradient(130deg, rgb(36, 198, 220), rgb(84, 51, 255) 41.07%, rgb(255, 0, 153) 76.05%);"></span>
-                            </p>
-                            <th:block
-                                    th:replace="~{macro/post-card :: post-card(${post.spec.pinned},${postCursor.previous})}"/>
-                        </div>
-                        <div th:if="${postCursor.hasNext()}"
-                             class="w-full h-full self-stretch mt-8 lg:mt-0">
-                            <p class="relative flex items-center pb-2 mb-4 text-xl text-ob-bright uppercase">
-                                <span class="w-full block text-right">下一篇更精彩</span>
-                                <svg class="svg-icon inline-block ml-2 inline-block ml-2"
-                                     style="height: 1em; width: 1em;">
-                                    <use href="#icon-arrow-right-circle" fill="currentColor"
-                                         stroke="var(--background-primary)"></use>
-                                </svg>
-                                <span class="absolute bottom-0 h-1 w-14 rounded-full right-0"
-                                      style="background: linear-gradient(130deg, rgb(36, 198, 220), rgb(84, 51, 255) 41.07%, rgb(255, 0, 153) 76.05%);"></span>
-                            </p>
-                            <th:block
-                                    th:replace="~{macro/post-card :: post-card(${post.spec.pinned},${postCursor.next})}"/>
-                        </div>
+                    <p class="relative flex items-center pb-2 mb-4 text-xl text-ob-bright uppercase" style="margin-top: 40px;">
+                        <i class="roozenfont roozen-angle-double-right"></i> &nbsp;
+                        <b>为你推荐</b>
+                        <span class="absolute bottom-0 h-1 w-14 rounded-full"
+                              style="background: linear-gradient(130deg, rgb(36,198,220), rgb(84,51,255) 41.07%, rgb(255,0,153) 76.05%);"></span>
+                    </p>
+                    <div class="flex flex-col lg:flex-row justify-start items-end my-12"
+                         th:with="suggestPostVos = ${postFinder.getSuggest(post.metadata.name)}">
+
+
+                        <th:block th:each="postVo : ${suggestPostVos}">
+                            <div class="w-full h-full self-stretch mr-0 lg:mr-4">
+                                <th:block
+                                        th:replace="~{macro/post-card :: post-card(false,${postVo})}"/>
+                            </div>
+                        </th:block>
                     </div>
 
                     <!--/* 评论组件 */-->

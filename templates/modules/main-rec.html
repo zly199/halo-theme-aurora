@@ -5,26 +5,74 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // 检查当前页面 URL 是否包含 '/page/'，如果是则隐藏 #feature
+            // Check if the current page URL contains '/page/', if so, hide #feature
             if (window.location.href.includes('/page/')) {
                 document.getElementById('feature').style.display = 'none';
             }
 
-            document.getElementById('show-more-btn').addEventListener('click', function() {
-                var hiddenItems = document.querySelectorAll('.hidden');
-                hiddenItems.forEach(function(item, index) {
-                    if (index < 4) { // 每次显示4个
-                        item.classList.remove('hidden');
+            var showMoreBtn = document.getElementById('show-more-btn');
+            if (showMoreBtn) {
+                showMoreBtn.addEventListener('click', function() {
+                    var hiddenItems = document.querySelectorAll('.post-item-main-rec.hidden');
+                    var maxItemsToShow = window.innerWidth < 768 ? 4 : (window.innerWidth < 1024 ? 3 : 4);
+                    var itemsToShow = Math.min(hiddenItems.length, maxItemsToShow);
+                    hiddenItems.forEach(function(item, index) {
+                        if (index < itemsToShow) {
+                            item.classList.remove('hidden');
+                            item.classList.add('shown'); // Add new identifier
+                        }
+                    });
+
+                    // Check if there are no more hidden items
+                    if (document.querySelectorAll('.post-item-main-rec.hidden').length === 0) {
+                        this.style.display = 'none';
                     }
                 });
+            }
 
-                // 检查是否还有隐藏的项目
-                if (document.querySelectorAll('.hidden').length === 0) {
-                    this.style.display = 'none';
+            // Adjust visibility of post items based on screen width
+            var postItems = document.querySelectorAll('.post-item-main-rec');
+            var maxItemsToShow = window.innerWidth < 768 ? 4 : (window.innerWidth < 1024 ? 3 : 4);
+            postItems.forEach(function(item, index) {
+                if (index >= maxItemsToShow) {
+                    item.classList.add('hidden');
                 }
             });
         });
     </script>
+
+    <style>
+        .post-item {
+            padding: 6px 6px; /* 调整左右 padding */
+            flex-basis: calc(25% - 1rem) !important;
+        }
+
+        @media (max-width: 1024px) {
+            .post-item {
+                padding: 6px 6px; /* 调整左右 padding */
+                flex-basis: calc(33.33% - 1rem) !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .post-item {
+                padding: 6px 6px; /* 调整左右 padding */
+                flex-basis: calc(50% - 0.2rem) !important;
+            }
+        }
+
+        @media (max-width: 440px) {
+            .post-item {
+                padding: 6px 2px; /* 调整左右 padding */
+                flex-basis: calc(50% - 0.1rem) !important;
+            }
+        }
+
+        .flex-container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+    </style>
 
     <div>
         <span>
@@ -36,14 +84,12 @@
                       style="background: linear-gradient(130deg, rgb(36, 198, 220), rgb(84, 51, 255) 41.07%, rgb(255, 0, 153) 76.05%);"></span>
             </p>
         </span>
-        <div class="flex flex-wrap justify-start items-end my-12"
+        <div class="flex-container justify-start items-end my-12"
              th:with="suggestPostVos = ${postFinder.getSuggest('')}">
 
             <th:block th:each="postVo, iterStat : ${suggestPostVos}">
-                <div class="w-full h-full self-stretch mr-0 lg:mr-3" style="flex-basis: 25%;"
-                     th:classappend="${iterStat.index >= 3} ? 'hidden' : ''">
-                    <th:block
-                            th:replace="~{macro/post-card :: post-card(false,${postVo})}"/>
+                <div class="w-full h-full self-stretch p-4 mr-12 lg:mr-14 post-item post-item-main-rec" th:classappend="${iterStat.index >= 4} ? 'hidden' : ''">
+                    <th:block th:replace="~{macro/post-card :: post-card(false,${postVo})}"/>
                 </div>
             </th:block>
         </div>

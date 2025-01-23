@@ -108,7 +108,7 @@
 
             if (showMoreBtn) {
                 showMoreBtn.addEventListener('click', function() {
-                    var hiddenItems = document.querySelectorAll('.hidden');
+                    var hiddenItems = document.querySelectorAll('.post-item-aritle.hidden');
                     hiddenItems.forEach(function(item, index) {
                         if (index < maxItemsToShow) {
                             item.classList.remove('hidden');

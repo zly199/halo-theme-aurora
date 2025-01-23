@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!-- 置顶的文章-->
+<div id="feature" th:fragment="main-rec">
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 检查当前页面 URL 是否包含 '/page/'，如果是则隐藏 #feature
+            if (window.location.href.includes('/page/')) {
+                document.getElementById('feature').style.display = 'none';
+            }
+
+            document.getElementById('show-more-btn').addEventListener('click', function() {
+                var hiddenItems = document.querySelectorAll('.hidden');
+                hiddenItems.forEach(function(item, index) {
+                    if (index < 4) { // 每次显示4个
+                        item.classList.remove('hidden');
+                    }
+                });
+
+                // 检查是否还有隐藏的项目
+                if (document.querySelectorAll('.hidden').length === 0) {
+                    this.style.display = 'none';
+                }
+            });
+        });
+    </script>
+
+    <div>
+        <span>
+            <p id="article-list"
+               class="relative opacity-90 flex items-center pt-12 pb-2 mb-8 text-3xl text-ob-bright uppercase">
+                <i class="roozenfont roozen-hand-heart-fill" style="font-size: 1em;"></i> &nbsp;
+                 猜你喜欢
+                <span class="absolute bottom-0 h-1 w-24 rounded-full"
+                      style="background: linear-gradient(130deg, rgb(36, 198, 220), rgb(84, 51, 255) 41.07%, rgb(255, 0, 153) 76.05%);"></span>
+            </p>
+        </span>
+        <div class="flex flex-wrap justify-start items-end my-12"
+             th:with="suggestPostVos = ${postFinder.getSuggest('')}">
+
+            <th:block th:each="postVo, iterStat : ${suggestPostVos}">
+                <div class="w-full h-full self-stretch mr-0 lg:mr-3" style="flex-basis: 25%;"
+                     th:classappend="${iterStat.index >= 3} ? 'hidden' : ''">
+                    <th:block
+                            th:replace="~{macro/post-card :: post-card(false,${postVo})}"/>
+                </div>
+            </th:block>
+        </div>
+
+        <div class="flex justify-center items-center">
+            <button id="show-more-btn" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 transition duration-300 flex items-center">
+                查看更多
+                <i class="roozenfont roozen-angle-double-down ml-2"></i>
+            </button>
+        </div>
+
+    </div>
+
+</div>
+</html>

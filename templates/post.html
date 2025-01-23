@@ -58,16 +58,23 @@
                         <span class="absolute bottom-0 h-1 w-14 rounded-full"
                               style="background: linear-gradient(130deg, rgb(36,198,220), rgb(84,51,255) 41.07%, rgb(255,0,153) 76.05%);"></span>
                     </p>
-                    <div class="flex flex-col lg:flex-row justify-start items-end my-12"
+                    <div class="flex flex-wrap justify-start items-end my-12"
                          th:with="suggestPostVos = ${postFinder.getSuggest(post.metadata.name)}">
 
-
-                        <th:block th:each="postVo : ${suggestPostVos}">
-                            <div class="w-full h-full self-stretch mr-0 lg:mr-4">
+                        <th:block th:each="postVo, iterStat : ${suggestPostVos}">
+                            <div class="w-full h-full self-stretch mr-0 lg:mr-4" style="flex-basis: 33.33%;"
+                                 th:classappend="${iterStat.index >= 6} ? 'hidden' : ''">
                                 <th:block
                                         th:replace="~{macro/post-card :: post-card(false,${postVo})}"/>
                             </div>
                         </th:block>
+                    </div>
+
+                    <div class="flex justify-center items-center">
+                        <button id="show-more-btn" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 transition duration-300 flex items-center">
+                            查看更多
+                            <i class="roozenfont roozen-angle-double-down ml-2"></i>
+                        </button>
                     </div>
 
                     <!--/* 评论组件 */-->
@@ -81,6 +88,23 @@
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('show-more-btn').addEventListener('click', function() {
+                var hiddenItems = document.querySelectorAll('.hidden');
+                hiddenItems.forEach(function(item, index) {
+                    if (index < 3) { // 每次显示3个
+                        item.classList.remove('hidden');
+                    }
+                });
+
+                // 检查是否还有隐藏的项目
+                if (document.querySelectorAll('.hidden').length === 0) {
+                    this.style.display = 'none';
+                }
+            });
+        });
+    </script>
     <script>
         var storageKey = "halo.upvoted.post.names";
 

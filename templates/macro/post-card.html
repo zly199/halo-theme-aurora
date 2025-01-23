@@ -1,3 +1,10 @@
+<style>
+    .article {
+        max-height: 300px; /* Adjust the height as needed */
+        overflow: hidden;
+    }
+</style>
+
 <th:block th:fragment="post-card(feature,post)">
     <li class="article-container" th:with="default_img=${#strings.contains(theme.config.article.default_img,'http') ? ((#strings.contains(theme.config.article.default_img,'?') ? theme.config.article.default_img : theme.config.article.default_img+'?')+','+post.spec.title): theme.config.article.default_img}">
         <span th:if="${feature}" class="article-tag">

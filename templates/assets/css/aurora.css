@@ -867,6 +867,9 @@ img, video {
     font-weight: 800;
     color: var(--text-bright)
 }
+#show-more-btn {
+    color: var(--text-bright);
+}
 
 @media (min-width: 1024px) {
     .article .article-content h1 {

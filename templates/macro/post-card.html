@@ -26,14 +26,15 @@
                 </use></svg> 推荐</b>
         </span>
         <div class="article">
-            <div class="article-thumbnail">
-                <img alt="" lazy="loading"
-                     th:src="${#strings.isEmpty(post.spec.cover) ? default_img : post.spec.cover} ">
-                <span class="thumbnail-screen"
-                      style="background: linear-gradient(130deg, rgb(36, 198, 220), rgb(84, 51, 255) 41.07%, rgb(255, 0, 153) 76.05%);"></span>
-            </div>
+            <a th:href="@{${post.status.permalink}}">
+                <div class="article-thumbnail">
+                    <img alt="" lazy="loading"
+                         th:src="${#strings.isEmpty(post.spec.cover) ? default_img : post.spec.cover} ">
+                    <span class="thumbnail-screen"
+                          style="background: linear-gradient(130deg, rgb(36, 198, 220), rgb(84, 51, 255) 41.07%, rgb(255, 0, 153) 76.05%);"></span>
+                </div>
+            </a>
             <div class="article-content" style="margin-top: 90px;padding-bottom: 0em">
-
                 <a th:href="@{${post.status.permalink}}" class="">
                     <h1 data-dia="article-link"
                         th:text="${post.spec.title}"
@@ -49,11 +50,10 @@
                                 </a>
                             </th:block>
                         </span>
-
-                        </div>
-                        <span class="text-ob-dim">
-                            [[${#dates.format(post.spec.publishTime, 'MMMM dd,yyyy')}]]
-                        </span>
+                    </div>
+                    <span class="text-ob-dim">
+                        [[${#dates.format(post.spec.publishTime, 'MMMM dd,yyyy')}]]
+                    </span>
                 </div>
             </div>
         </div>

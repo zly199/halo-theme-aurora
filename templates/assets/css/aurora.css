@@ -823,7 +823,10 @@ img, video {
     left: 0;
     height: 120%;
     width: 100%;
-    background: var(--article-cover)
+    background: var(--article-cover);
+    background-size: 100% 50%;
+    background-position: bottom;
+    background-repeat: no-repeat; /* 防止背景重复 */
 }
 
 .article .article-content {

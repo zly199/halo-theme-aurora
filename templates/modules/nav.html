@@ -2,40 +2,37 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <nav class="show" id="nav" th:fragment="nav(title,subtitle)">
     <style>
-        .header-container .site-header {
+        .site-header {
             max-width: var(--max-width);
-            position: fixed; /* 固定定位 */
-            top: 0; /* 固定在页面顶部 */
-            width: 92%; /* 确保占满容器宽度 */
+            position: fixed; /* Fixed positioning */
+            top: 0; /* Fixed at the top of the page */
+            width: 92%; /* Ensure it spans the container width */
             z-index: 50;
             margin: 0 auto;
             display: flex;
-            padding-top: 1rem;
-            padding-bottom: 1rem;
-            background-color: transparent; /* 设置背景透明 */
+            backdrop-filter: blur(10px); /* Adds a blur effect to the background */
+
         }
-        /* 添加一个占位符，避免内容被遮挡 */
         .header-placeholder {
-            height: 80px; /* 根据实际header高度调整 */
+            height: 70px; /* Adjust based on actual header height */
         }
     </style>
-    <div class="header-placeholder"></div> <!-- 占位符 -->
+    <div class="header-placeholder"></div> <!-- Placeholder -->
     <div class="header-container">
         <header class="site-header">
             <div onclick="javascript:window.location.href='/'" class="flex items-start self-stretch relative">
-                <div class="flex flex-col relative py-4 z-10 text-white font-medium ob-drop-shadow cursor-pointer">
+                <div class="flex flex-col relative py-4 z-10 text-white font-medium ob-drop-shadow cursor-pointer" style="padding-bottom: 0em">
                     <span class="flex text-4xl"
                           th:text="${#strings.isEmpty(title) ? site.title : title}"></span>
                     <span class="font-extrabold text-xs uppercase"
                           th:text="${#strings.isEmpty(subtitle) ? site.subtitle : subtitle}"></span>
                 </div>
                 <img class="logo-image" th:src="${site.logo}" alt="site-logo"></div>
-            <!-- 导航栏中间 -->
+            <!-- Middle of the navigation bar -->
             <th:block th:replace="~{modules/widgets/nav-menu :: nav-menu}"></th:block>
-            <!-- 导航栏右侧 -->
+            <!-- Right side of the navigation bar -->
             <div th:replace="~{modules/widgets/nav-right :: nav-right}"></div>
         </header>
     </div>
 </nav>
-
 </html>

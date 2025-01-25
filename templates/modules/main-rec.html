@@ -5,36 +5,45 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Check if the current page URL contains '/page/', if so, hide #feature
-            if (window.location.href.includes('/page/')) {
-                document.getElementById('feature').style.display = 'none';
-            }
-
             var showMoreBtn = document.getElementById('show-more-btn');
+            var maxItemsToShow = window.innerWidth < 768 ? 4 : (window.innerWidth < 1024 ? 3 : 4);
+            var currentBatchStart = 0;
+
             if (showMoreBtn) {
                 showMoreBtn.addEventListener('click', function() {
-                    var hiddenItems = document.querySelectorAll('.post-item-main-rec.hidden');
-                    var maxItemsToShow = window.innerWidth < 768 ? 4 : (window.innerWidth < 1024 ? 3 : 4);
-                    var itemsToShow = Math.min(hiddenItems.length, maxItemsToShow);
-                    hiddenItems.forEach(function(item, index) {
-                        if (index < itemsToShow) {
-                            item.classList.remove('hidden');
-                            item.classList.add('shown'); // Add new identifier
-                        }
+                    var allItems = document.querySelectorAll('.post-item-main-rec');
+                    var totalItems = allItems.length;
+
+                    // Hide current shown items
+                    allItems.forEach(function(item) {
+                        item.classList.remove('shown');
+                        item.classList.add('hidden');
                     });
 
-                    // Check if there are no more hidden items
-                    if (document.querySelectorAll('.post-item-main-rec.hidden').length === 0) {
-                        this.style.display = 'none';
+                    // Calculate the next batch start index
+                    var nextBatchStart = currentBatchStart + maxItemsToShow;
+                    if (nextBatchStart >= totalItems) {
+                        nextBatchStart = 0; // Loop back to the start
                     }
+
+                    // Show next batch of items
+                    for (var i = 0; i < maxItemsToShow; i++) {
+                        var index = (nextBatchStart + i) % totalItems;
+                        allItems[index].classList.remove('hidden');
+                        allItems[index].classList.add('shown');
+                    }
+
+                    // Update current batch start index
+                    currentBatchStart = nextBatchStart;
                 });
             }
 
-            // Adjust visibility of post items based on screen width
+            // Initially show items based on screen width
             var postItems = document.querySelectorAll('.post-item-main-rec');
-            var maxItemsToShow = window.innerWidth < 768 ? 4 : (window.innerWidth < 1024 ? 3 : 4);
             postItems.forEach(function(item, index) {
-                if (index >= maxItemsToShow) {
+                if (index < maxItemsToShow) {
+                    item.classList.add('shown');
+                } else {
                     item.classList.add('hidden');
                 }
             });
@@ -57,14 +66,14 @@
         @media (max-width: 768px) {
             .post-item {
                 padding: 6px 6px; /* 调整左右 padding */
-                flex-basis: calc(50% - 0.2rem) !important;
+                flex-basis: calc(50% - 0.2rem) !重要;
             }
         }
 
         @media (max-width: 440px) {
             .post-item {
                 padding: 6px 2px; /* 调整左右 padding */
-                flex-basis: calc(50% - 0.1rem) !important;
+                flex-basis: calc(50% - 0.1rem) !重要;
             }
         }
 
@@ -72,18 +81,33 @@
             display: flex;
             flex-wrap: wrap;
         }
+
+        .title-container {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .title-container p {
+            margin-right: 10px; /* 调整间距 */
+        }
     </style>
 
     <div>
-        <span>
+        <div class="title-container">
             <p id="article-list"
                class="relative opacity-90 flex items-center pt-12 pb-2 mb-8 text-3xl text-ob-bright uppercase">
                 <i class="roozenfont roozen-hand-heart-fill" style="font-size: 1em;"></i> &nbsp;
-                 猜你喜欢
+                猜你喜欢
                 <span class="absolute bottom-0 h-1 w-24 rounded-full"
                       style="background: linear-gradient(130deg, rgb(36, 198, 220), rgb(84, 51, 255) 41.07%, rgb(255, 0, 153) 76.05%);"></span>
             </p>
-        </span>
+            <button id="show-more-btn" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 transition duration-300 flex items-center">
+                <i class="roozenfont roozen-arrows-rotate ml-2"></i>
+                &nbsp;换一批
+            </button>
+        </div>
+
         <div class="flex-container justify-start items-end my-12"
              th:with="suggestPostVos = ${postFinder.getSuggest('')}">
 
@@ -93,14 +117,6 @@
                 </div>
             </th:block>
         </div>
-
-        <div class="flex justify-center items-center">
-            <button id="show-more-btn" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 transition duration-300 flex items-center">
-                查看更多
-                <i class="roozenfont roozen-angle-double-down ml-2"></i>
-            </button>
-        </div>
-
     </div>
 
 </div>

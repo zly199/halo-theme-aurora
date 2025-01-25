@@ -1,146 +1,21 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <th:block th:fragment="navigator">
-    <script type="text/javascript" th:src="@{/assets/js/navigator.js}"></script>
-    <div id="Ob-Navigator"
-         style="-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;">
-        <div id="returnTop" onclick="returnTop()" style="display: none" class="Ob-Navigator-btt">
-            <div>
-                <svg class="svg-icon text-ob-bright"
-                     style="height: 1em; width: 1em;">
-                    <use href="#icon-back-to-top" fill="currentColor"
-                         stroke="var(--background-primary)"></use>
-                </svg>
-            </div>
-            <span class="Ob-Navigator-tips">返回顶部</span></div>
-        <div class="Ob-Navigator-ball" onclick="navigatorClickHandler()">
-            <div
-                    style="background: linear-gradient(130deg, rgb(36, 198, 220), rgb(84, 51, 255) 41.07%, rgb(255, 0, 153) 76.05%);">
-                <svg id="scrollSvg1" class="svg-icon">
-                    <use href="#icon-dots" fill="currentColor"
-                         stroke="var(--background-primary)"></use>
-                </svg>
-                <svg id="scrollSvg2" class="svg-icon text-base stroke-2"
 
-                     style="height: 1em; width: 1em;display: none">
-                    <use href="#icon-close" fill="currentColor"
-                         stroke="var(--background-primary)"></use>
-                </svg>
-                <span id="scrollPercent" class="text-sm"></span>
-            </div>
-        </div>
-        <ul id="navigator-submenu" class="Ob-Navigator-submenu">
-            <li id="Ob-Navigator-top" onclick="returnTop()"
-                style="background: linear-gradient(130deg, rgb(36, 198, 220), rgb(84, 51, 255) 41.07%, rgb(255, 0, 153) 76.05%);">
-                <div>
-                    <svg class="svg-icon text-ob-bright">
-                        <use href="#icon-back-to-top" fill="currentColor"
-                             stroke="var(--background-primary)"></use>
-                    </svg>
-                </div>
-                <span class="Ob-Navigator-tips">返回顶部</span></li>
-            <li id="Ob-Navigator-menu"
-                class="lg:none" onclick="openMobileMenu()"
-                style="background: linear-gradient(130deg, rgb(36, 198, 220), rgb(84, 51, 255) 41.07%, rgb(255, 0, 153) 76.05%);">
-                <div>
-                    <svg class="svg-icon text-ob-bright"
-                         style="height: 1em; width: 1em;">
-                        <use href="#icon-nav-menu" fill="currentColor" stroke="var(--background-primary)"></use>
-                    </svg>
-                </div>
-                <span class="Ob-Navigator-tips">打开菜单</span></li>
-            <li id="Ob-Navigator-home" onclick="javascript:window.location.href='/'"
-                style="background: linear-gradient(130deg, rgb(36, 198, 220), rgb(84, 51, 255) 41.07%, rgb(255, 0, 153) 76.05%);">
-                <div>
-                    <svg class="svg-icon text-ob-bright">
-                        <use href="#icon-nav-home" fill="currentColor"
-                             stroke="var(--background-primary)"></use>
-                    </svg>
-                </div>
-                <span class="Ob-Navigator-tips">返回首页</span></li>
-            <li id="Ob-Navigator-search"
-                onclick="SearchWidget.open()"
-                style="background: linear-gradient(130deg, rgb(36, 198, 220), rgb(84, 51, 255) 41.07%, rgb(255, 0, 153) 76.05%);">
-                <div>
-                    <svg class="svg-icon text-ob-bright">
-                        <use href="#icon-nav-search" fill="var(--background-primary)" stroke="currentColor"></use>
-                    </svg>
-                </div>
-                <span class="Ob-Navigator-tips">打开搜索</span>
-            </li>
-        </ul>
-        <script>
-            const submenu = document.getElementById('navigator-submenu')
-            var menu = submenu.childNodes[3];
-            var home = submenu.childNodes[5]
-            const mobile = document.getElementById('App-Mobile-Profile');
-            const pc_aside = document.getElementById('app-pc-aside')
-            const post_cols = document.getElementById('post-cols')
+    <script>
+
+        const pc_aside = document.getElementById('app-pc-aside')
+        const post_cols = document.getElementById('post-cols')
+
+        if (window.innerWidth < 1024) {
+            if (pc_aside !== null) {
+                pc_aside.style.display = 'none'
+            }
             if (post_cols !== null) {
-                var set_post_cols = post_cols.classList.toString().split(' ')[1];
+                post_cols.classList.remove('grid-cols-1', 'grid-cols-2', 'grid-cols-3', 'grid-cols-4')
+                post_cols.classList.add('grid-cols-1');
             }
-            if (window.innerWidth >= 1024) {
-                menu = submenu.removeChild(menu)
-                mobile.style.display = 'none'
-            } else {
-                if (pc_aside !== null) {
-                    pc_aside.style.display = 'none'
-                }
-                submenu.insertBefore(menu, home)
-                if (post_cols !== null) {
-                    post_cols.classList.remove('grid-cols-1', 'grid-cols-2', 'grid-cols-3', 'grid-cols-4')
-                    post_cols.classList.add('grid-cols-1');
-                }
-            }
-            let timeOut = null; // 初始化空定时器
-            window.addEventListener("resize", () => {
-                clearTimeout(timeOut)   // 频繁操作，一直清空先前的定时器
-                timeOut = setTimeout(() => {  // 只执行最后一次事件
-                    if (submenu.isEqualNode(menu.parentNode) && window.innerWidth >= 1024) {
-                        menu = submenu.removeChild(menu)
-                        mobile.style.display = 'none'
-                        if (pc_aside !== null) {
-                            pc_aside.style.display = 'block'
-                        }
-                        if (post_cols !== null) {
-                            post_cols.classList.remove('grid-cols-1', 'grid-cols-2', 'grid-cols-3', 'grid-cols-4')
-                            post_cols.classList.add(set_post_cols);
-                        }
-                    } else if (!submenu.isEqualNode(menu.parentNode) && window.innerWidth < 1024) {
-                        if(pc_aside!==null) {
-                            pc_aside.style.display = 'none'
-                        }
-                        submenu.insertBefore(menu, home)
-                        if (post_cols !== null) {
-                            post_cols.classList.remove('grid-cols-1', 'grid-cols-2', 'grid-cols-3', 'grid-cols-4')
-                            post_cols.classList.add('grid-cols-1');
-                        }
-                    }
-                }, 300)
-            })
-
-            var isOpen = false;
-            const app = document.getElementById('app')
-            const app_wrapper = document.getElementById('App-Wrapper')
-
-            function openMobileMenu() {
-                if (isOpen) {
-                    mobile.style = 'opacity: 0; transform: translateY(-20%);'
-                    document.body.style = ''
-                    app.style = 'overflow: auto; max-height: initial;'
-                    app_wrapper.style = 'min-height: 100vh; border-radius: 0px; overflow: hidden; max-height: 100vh; transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1);'
-                    setTimeout(() => {
-                        app_wrapper.style = 'min-height: initial; border-radius: 0px; overflow: auto; max-height: initial; transform: none;'
-                    }, 500)
-                } else {
-                    mobile.style = 'opacity: 1; transform: translateY(0px);'
-                    document.body.style = 'overflow: hidden; position: fixed; top: 0px; width: 100%;'
-                    app.style = 'overflow: hidden; max-height: 100vh;'
-                    app_wrapper.style = 'min-height: 100vh; border-radius: 16px; overflow: hidden; max-height: 100vh; transform: translate3d(302px, 0px, 0px) scale3d(0.86, 0.86, 1);'
-                }
-                isOpen = !isOpen;
-            }
-        </script>
-    </div>
+        }
+    </script>
 </th:block>
 </html>

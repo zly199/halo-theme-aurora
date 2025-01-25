@@ -2,16 +2,17 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <nav class="show" id="nav" th:fragment="nav(title,subtitle)">
     <style>
-        .site-header {
+        .header-container .site-header {
             max-width: var(--max-width);
-            position: fixed; /* Fixed positioning */
-            top: 0; /* Fixed at the top of the page */
-            width: 92%; /* Ensure it spans the container width */
-            z-index: 50;
-            margin: 0 auto;
-            display: flex;
-            backdrop-filter: blur(10px); /* Adds a blur effect to the background */
-
+            position: fixed !important; /* Fixed positioning */
+            top: 0 !important; /* Fixed at the top of the page */
+            width: 92% !important; /* Ensure it spans the container width */
+            z-index: 50 !important;
+            margin: 0 auto !important;
+            display: flex !important;
+            backdrop-filter: blur(10px) !important; /* Adds a blur effect to the background */
+            padding-top: 0rem !important;
+            padding-bottom: 0rem !important;
         }
         .header-placeholder {
             height: 70px; /* Adjust based on actual header height */

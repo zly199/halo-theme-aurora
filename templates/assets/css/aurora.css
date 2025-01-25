@@ -3510,15 +3510,6 @@ div::-webkit-scrollbar-track {
     transition: width 1s linear
 }
 
-.header-container .site-header {
-    max-width: var(--max-width);
-    position: relative;
-    z-index: 50;
-    margin: 0 auto;
-    display: flex;
-    padding-top: 1rem;
-    padding-bottom: 1rem
-}
 
 #Ob-Navigator {
     position: fixed;

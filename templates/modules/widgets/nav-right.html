@@ -4,16 +4,43 @@
 <th:block th:fragment="nav-right">
     <div id="nav-right" class="header-controls absolute top-10 right-0 flex flex-row"
          tabindex="0" style="z-index:999;right: -40px;width: 140px;">
-            <span class="ob-drop-shadow" data-dia="search" onclick="SearchWidget.open()">
-                <i class="roozenfont roozen-magnifying-glass" style="font-size: x-large"></i>
-            </span>
-        <theme-button id="btn" size="1"></theme-button>
+        <span class="ob-drop-shadow" data-dia="search" onclick="SearchWidget.open()">
+            <i class="roozenfont roozen-magnifying-glass" style="font-size: x-large"></i>
+        </span>
+        <div class="dropdown" style="position: relative;">
+            <button class="dropbtn" id="theme-toggle-btn" style="font-size: x-large; padding: 0; background: none; border: none;">
+                <i class="roozenfont roozen-bars" style="color: white;font-size: x-large"></i>
+            </button>
+            &nbsp;
+            <div class="dropdown-content" id="dropdown-content" style="display: none; position: absolute; right: 0; width: 150px; background-color: #fff; border: 1px solid #ccc; box-shadow: 0 8px 16px rgba(0,0,0,0.2);">
+                <ul th:with="menu = ${#strings.isEmpty(theme.config.nav.menu) ? menuFinder.getPrimary() : menuFinder.getByName(theme.config.nav.menu)}">
+                    <li><a href="/uc" style="display: block; padding: 8px 16px; text-decoration: none; color: #000;">个人中心</a></li>
+                    <li><a href="#" id="theme-toggle-link" style="display: block; padding: 8px 16px; text-decoration: none; color: #000;">夜间模式</a></li>
+                    <li th:each="menuItem : ${menu.menuItems}">
+                        <a th:href="@{${menuItem.status.href}}" style="display: block; padding: 8px 16px; text-decoration: none; color: #000;" th:text="${menuItem.status.displayName}"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
         <script>
+            document.getElementById("theme-toggle-btn").addEventListener("click", (e) => {
+                e.stopPropagation();
+                const dropdownContent = document.getElementById("dropdown-content");
+                dropdownContent.style.display = dropdownContent.style.display === "none" ? "block" : "none";
+            });
+
+            document.addEventListener("click", (e) => {
+                const dropdownContent = document.getElementById("dropdown-content");
+                if (dropdownContent.style.display === "block" && !dropdownContent.contains(e.target)) {
+                    dropdownContent.style.display = "none";
+                }
+            });
+
             let body_class = document.body.classList;
             let app_class = document.getElementById("App-Wrapper").classList;
             let app_container = document.getElementById("App-Container");
             let data_theme = localStorage.getItem('data-theme')
-            document.getElementById("btn").setAttribute("value", data_theme)
+            document.getElementById("theme-toggle-link").textContent = data_theme === 'dark' ? '白天模式' : '夜间模式';
 
             function changeDataTheme(theme) {
                 if (theme === 'dark') {
@@ -24,6 +51,7 @@
                     app_class.remove('theme-light')
                     app_class.add('theme-dark');
                     app_container.style = "overflow:hidden; --text-accent: #24c6dc; --text-sub-accent: #ff0099; --main-gradient: linear-gradient(130deg, #24c6dc, #5433ff 41.07%, #ff0099 76.05%);"
+                    document.getElementById("theme-toggle-link").textContent = '白天模式';
                 } else {
                     document.documentElement.setAttribute('data-theme', 'light')
                     localStorage.setItem('data-theme', 'light')
@@ -32,12 +60,18 @@
                     app_class.remove('theme-dark')
                     app_class.add('theme-light');
                     app_container.style = "overflow:hidden; --text-accent: #ff0099; --text-sub-accent: #5433ff; --main-gradient: linear-gradient(130deg, #24c6dc, #5433ff 41.07%, #ff0099 76.05%);"
+                    document.getElementById("theme-toggle-link").textContent = '夜间模式';
                 }
                 btf.dataCodeTheme()
             }
-            btn.addEventListener("change", e => {
-                changeDataTheme(e.detail)
+
+            document.getElementById("theme-toggle-link").addEventListener("click", e => {
+                e.preventDefault();
+                let currentTheme = localStorage.getItem('data-theme');
+                let newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                changeDataTheme(newTheme);
             });
+
             changeDataTheme(data_theme);
         </script>
         <script th:src="@{/assets/js/day-night-toggle-button.js}"></script>

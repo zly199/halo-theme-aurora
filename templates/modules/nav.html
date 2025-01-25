@@ -1,6 +1,25 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <nav class="show" id="nav" th:fragment="nav(title,subtitle)">
+    <style>
+        .header-container .site-header {
+            max-width: var(--max-width);
+            position: fixed; /* 固定定位 */
+            top: 0; /* 固定在页面顶部 */
+            width: 92%; /* 确保占满容器宽度 */
+            z-index: 50;
+            margin: 0 auto;
+            display: flex;
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+            background-color: transparent; /* 设置背景透明 */
+        }
+        /* 添加一个占位符，避免内容被遮挡 */
+        .header-placeholder {
+            height: 80px; /* 根据实际header高度调整 */
+        }
+    </style>
+    <div class="header-placeholder"></div> <!-- 占位符 -->
     <div class="header-container">
         <header class="site-header">
             <div onclick="javascript:window.location.href='/'" class="flex items-start self-stretch relative">

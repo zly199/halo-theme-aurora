@@ -104,6 +104,39 @@
             window.location.href = `/search?title=${encodeURIComponent(query)}&page=1&size=12`;
         });
     </script>
+    <style>
+        #post-cols {
+            display: grid;
+            gap: 8px;
+        }
+
+        /* Default for mobile: 2 columns */
+        @media (max-width: 600px) {
+            #post-cols {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* For tablets: 3 columns */
+        @media (min-width: 601px) and (max-width: 1024px) {
+            #post-cols {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* For desktops: 4 columns */
+        @media (min-width: 1025px) {
+            #post-cols {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+    </style>
+
+    <ul id="post-cols">
+        <th:block th:each="post : ${posts.items}">
+            <th:block th:replace="~{macro/post-card :: post-card(${post.spec.pinned},${post})}"/>
+        </th:block>
+    </ul>
 </th:block>
 
 

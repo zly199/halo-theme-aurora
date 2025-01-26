@@ -19,11 +19,10 @@
                     搜索
                 </button>
             </div>
-
             <div th:if="${title != '' and size != '' and page != ''}" th:with="page=${param.page != null ? param.page : 1},
   size=${param.size != null && param.size.size() > 0 ? (T(java.lang.Integer).parseInt(param.size[0]) > 12 ? 12 : T(java.lang.Integer).parseInt(param.size[0])) : 12},
   title=${param.title != null && param.title.size() > 0 ? param.title[0] : ''}">
-                <div th:unless="${posts.total == 0}" th:with="posts = ${postFinder.listByTitle(page, size, title)}">
+                <div th:if="${title != '' and size != '' and page != ''}" th:with="posts  = ${postFinder.listByTitle(page, size, title)}">
                     <div th:if="${posts.total == 0}" style="text-align: center;">
                         <p><strong>没有找到相关内容.</strong></p>
                     </div>

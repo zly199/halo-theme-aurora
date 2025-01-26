@@ -37,7 +37,7 @@
                                     <svg class="svg-icon">
                                         <use href="#icon-arrow-left" fill="currentColor" stroke="var(--background-primary)"></use>
                                     </svg>
-                                    Newer
+                                    新的
                                 </li>
                             </a>
 
@@ -65,7 +65,7 @@
                             </th:block>
 
                             <a th:if="${posts.page < T(java.lang.Math).ceil(posts.total / size)}" th:href="@{'/search?page=' + (${posts.page} + 1) + '&size=' + ${size} + '&title=' + ${title}}">
-                                <li class="text-ob-bright">Older
+                                <li class="text-ob-bright">以往
                                     <svg class="svg-icon">
                                         <use href="#icon-arrow-right" fill="currentColor" stroke="var(--background-primary)"></use>
                                     </svg>

@@ -2,15 +2,109 @@
 <html xmlns:th="https://www.thymeleaf.org"
       th:replace="~{layout :: html(htmlType = 'tag',content = ~{::content},title = ${'搜索' + ' | ' + site.title})}">
 <th:block th:fragment="content">
-<!--    统一导航-->
+    <!-- 统一导航 -->
     <th:block th:replace="~{macro/app-banner :: app-banner(img=${theme.config.top.tag_img})}"/>
 
     <div class="relative z-10">
-        <div class="block">
-            测试
+        <div class="flex flex-col mt-20">
+            <!-- 面包屑 -->
+            <th:block th:replace="~{macro/breadcrumbs :: breadcrumbs('首页','搜索')}"/>
+
+            <!-- 搜索框 -->
+
+            <div class="search-box" style="display: flex; justify-content: center; margin-top: 20px; max-width: 1000px; margin: 20px auto;">
+                <input type="text" id="search-input" placeholder="输入关键词搜索..." class="search-input" style="flex: 2; padding: 10px; border: 2px solid #ccc; border-radius: 5px 0 0 5px; font-size: 16px;"/>
+                <button id="search-button" style="padding: 10px; border: 2px solid #ccc; border-left: none; border-radius: 0 5px 5px 0; font-size: 16px; background-color: #fff;">
+                    <i class="roozenfont roozen-magnifying-glass"></i>
+                    搜索
+                </button>
+            </div>
+
+            <div th:if="${title != '' and size != '' and page != ''}" th:with="page=${param.page != null ? param.page : 1},
+  size=${param.size != null && param.size.size() > 0 ? (T(java.lang.Integer).parseInt(param.size[0]) > 12 ? 12 : T(java.lang.Integer).parseInt(param.size[0])) : 12},
+  title=${param.title != null && param.title.size() > 0 ? param.title[0] : ''}">
+                <div th:if="${title != '' and size != '' and page != ''}" th:with="posts = ${postFinder.listByTitle(page, size, title)}">
+                    <ul id="post-cols" th:class="${'grid grid-cols-2 gap-8'}">
+                        <th:block th:each="post : ${posts.items}">
+                            <th:block th:replace="~{macro/post-card :: post-card(${post.spec.pinned},${post})}"/>
+                        </th:block>
+                    </ul>
+                    <!-- Add pagination logic -->
+                    <div class="paginator">
+                        <ul>
+                            <a th:if="${posts.page > 1}" th:href="@{'/search?page=' + (${posts.page} - 1) + '&size=' + ${size} + '&title=' + ${title}}">
+                                <li class="text-ob-bright">
+                                    <svg class="svg-icon">
+                                        <use href="#icon-arrow-left" fill="currentColor" stroke="var(--background-primary)"></use>
+                                    </svg>
+                                    Newer
+                                </li>
+                            </a>
+
+                            <!-- Page number buttons -->
+                            <th:block th:if="${posts.page > 3}">
+                                <a class="page-number" th:href="@{'/search?page=1&size=' + ${size} + '&title=' + ${title}}">
+                                    <li th:text="1"></li>
+                                </a>
+                                <li th:if="${posts.page != 4}">…</li>
+                            </th:block>
+
+                            <th:block th:each="index : ${#numbers.sequence(posts.page - 2, posts.page + 2)}">
+                                <li class="active" th:if="${posts.page == index}" th:text="${posts.page}"></li>
+                                <a th:unless="${posts.page == index}" th:if="${index > 0 && index <= T(java.lang.Math).ceil(posts.total / size)}"
+                                   th:href="@{'/search?page=' + ${index} + '&size=' + ${size} + '&title=' + ${title}}">
+                                    <li th:text="${index}"></li>
+                                </a>
+                            </th:block>
+
+                            <th:block th:if="${T(java.lang.Math).ceil(posts.total / size) - posts.page > 2}">
+                                <li th:if="${T(java.lang.Math).ceil(posts.total / size) - posts.page != 3}">…</li>
+                                <a th:href="@{'/search?page=' + ${T(java.lang.Math).ceil(posts.total / size)} + '&size=' + ${size} + '&title=' + ${title}}">
+                                    <li th:text="${T(java.lang.Math).ceil(posts.total / size)}"></li>
+                                </a>
+                            </th:block>
+
+                            <a th:if="${posts.page < T(java.lang.Math).ceil(posts.total / size)}" th:href="@{'/search?page=' + (${posts.page} + 1) + '&size=' + ${size} + '&title=' + ${title}}">
+                                <li class="text-ob-bright">Older
+                                    <svg class="svg-icon">
+                                        <use href="#icon-arrow-right" fill="currentColor" stroke="var(--background-primary)"></use>
+                                    </svg>
+                                </li>
+                            </a>
+                        </ul>
+                        <div id="returnTop" onclick="returnTop()" class="Ob-Navigator-btt">
+                            <i class="roozenfont roozen-arrow-up"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+    <script>
+        // Get the URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const titleParam = urlParams.get('title');
 
+        // Set the value of the search input if the title parameter exists
+        const searchInput = document.getElementById('search-input');
+        if (titleParam) {
+            searchInput.value = titleParam;
+        }
+
+        // Add event listener for the Enter key
+        searchInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                const query = e.target.value;
+                window.location.href = `/search?title=${encodeURIComponent(query)}&page=1&size=12`;
+            }
+        });
+        const searchButton = document.getElementById('search-button');
+        searchButton.addEventListener('click', function () {
+            const query = searchInput.value;
+            window.location.href = `/search?title=${encodeURIComponent(query)}&page=1&size=12`;
+        });
+    </script>
 </th:block>
+
 
 </html>

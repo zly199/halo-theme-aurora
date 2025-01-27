@@ -61,9 +61,13 @@
 
                             <th:block th:if="${T(java.lang.Math).ceil((posts.total + size - 1) / size) - posts.page > 2}">
                                 <li th:if="${T(java.lang.Math).ceil((posts.total + size - 1) / size) - posts.page != 3}">…</li>
-                                <a th:href="@{'/search?page=' + ${T(java.lang.Math).ceil((posts.total + size - 1) / size)} + '&size=' + ${size} + '&title=' + ${title}}">
-                                    <li th:text="${T(java.lang.Math).ceil((posts.total + size - 1) / size)}"></li>
-                                </a>
+
+                                <th:block th:with="totalPages=${(T(java.lang.Math).ceil((posts.total + size - 1) / size)).intValue()}">
+                                    <a th:href="@{'/search?page=' + ${totalPages} + '&size=' + ${size} + '&title=' + ${title}}">
+                                        <li th:text="${totalPages}"></li>
+                                    </a>
+                                </th:block>
+
                             </th:block>
 
                             <a th:if="${posts.page < T(java.lang.Math).ceil((posts.total + size - 1) / size)}" th:href="@{'/search?page=' + (${posts.page} + 1) + '&size=' + ${size} + '&title=' + ${title}}">

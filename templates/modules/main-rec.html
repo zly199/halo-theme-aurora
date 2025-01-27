@@ -7,9 +7,8 @@
         document.addEventListener('DOMContentLoaded', function() {
             var pathSegments = window.location.pathname.split('/');
             if (!pathSegments.includes('page')) {
-                //remove display = none
+                // Remove display = none
                 document.getElementById('main-rec').style.display = 'block';
-                return;
             }
 
             var showMoreBtn = document.getElementById('show-more-btn');
@@ -101,6 +100,14 @@
         }
         .title-container button {
             padding-top: 0em;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .shown {
+            display: block;
         }
 
     </style>

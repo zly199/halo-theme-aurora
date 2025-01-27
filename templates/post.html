@@ -50,7 +50,7 @@
                             <!-- 点赞按钮 -->
                             <span id="upvote-btn" style="justify-content: flex-end; color: white; cursor: pointer; display: flex; align-items: center; gap: 4px;"
                                   th:onclick="handleUpvote([[${post.metadata.name}]])">
-                                <i class="roozenfont roozen-heartbeat" id="upvote-icon"></i>
+                                <i class="roozenfont roozen-thumbs-up" id="upvote-icon"></i>
                                 <span id="upvote-id" class="opacity-70" th:text="${post.stats?.upvote ?: 0}"></span>
                                 <span id="upvote-text" style="font-size: 0.9em;">点个赞</span>
                             </span>

@@ -8,21 +8,29 @@
     <div class="relative z-10">
         <div class="flex flex-col mt-20">
             <!-- 面包屑 -->
-            <th:block th:replace="~{macro/breadcrumbs :: breadcrumbs('首页','搜索')}"/>
+            <div class="post-header">
+                <ul class="breadcrumbs flex flex-row gap-6 text-white">
+                    <li th:text="'首页'"></li>
+                    <li id="breadcrumb-title" th:text="'影片搜索'"></li>
+                </ul>
+                <h1 id="page-title" th:text="'影片搜索'" class="post-title text-white uppercase"></h1>
+            </div>
 
             <!-- 搜索框 -->
-
-            <div class="search-box" style="display: flex; justify-content: center; margin-top: 20px; max-width: 1000px; margin: 20px auto;">
+            <div class="search-box" id="search-box" style="display: flex; justify-content: center; margin-top: 20px; max-width: 1000px; margin: 20px auto;">
                 <input type="text" id="search-input" placeholder="输入关键词搜索..." class="search-input" style="flex: 2; padding: 10px; border: 2px solid #ccc; border-radius: 5px 0 0 5px; font-size: 16px;"/>
                 <button id="search-button" style="padding: 10px; border: 2px solid #ccc; border-left: none; border-radius: 0 5px 5px 0; font-size: 16px; background-color: #fff;">
                     <i class="roozenfont roozen-magnifying-glass"></i>
                     搜索
                 </button>
             </div>
-            <div th:if="${title != '' and size != '' and page != ''}" th:with="page=${param.page != null ? param.page : 1},
-  size=${param.size != null && param.size.size() > 0 ? (T(java.lang.Integer).parseInt(param.size[0]) > 12 ? 12 : T(java.lang.Integer).parseInt(param.size[0])) : 12},
-  title=${param.title != null && param.title.size() > 0 ? param.title[0] : ''}">
-                <div th:if="${title != '' and size != '' and page != ''}" th:with="posts  = ${postFinder.listByTitle(page, size, title)}">
+            <div th:if="${size != '' and page != ''}" th:with="page=${param.page != null ? T(java.lang.Integer).parseInt(param.page) : 1},
+              size=${param.size != null && param.size.size() > 0 ? (T(java.lang.Integer).parseInt(param.size[0]) > 12 ? 12 : T(java.lang.Integer).parseInt(param.size[0])) : 12},
+              title=${param.title != null && param.title.size() > 0 ? param.title[0] : ''},
+              type=${param.type != null && param.type.size() > 0 ? param.type[0] : 'search'}">
+
+                <div th:if="${size != '' and page != ''}"
+                     th:with="posts = ${type == 'hot' ? postFinder.list({page: page, size: size, sort: {'stats.visit,desc'}}) : postFinder.listByTitle(page, size, title)}">
                     <div th:if="${posts.total == 0}" style="text-align: center;">
                         <p><strong>没有找到相关内容.</strong></p>
                     </div>
@@ -34,7 +42,7 @@
                     <!-- Add pagination logic -->
                     <div class="paginator">
                         <ul>
-                            <a th:if="${posts.page > 1}" th:href="@{'/search?page=' + (${posts.page} - 1) + '&size=' + ${size} + '&title=' + ${title}}">
+                            <a th:if="${posts.page > 1}" th:href="@{'/search?page=' + (${posts.page} - 1) + '&size=' + ${size} + '&title=' + ${title} + '&type=' + ${type}}">
                                 <li class="text-ob-bright">
                                     <svg class="svg-icon">
                                         <use href="#icon-arrow-left" fill="currentColor" stroke="var(--background-primary)"></use>
@@ -45,7 +53,7 @@
 
                             <!-- Page number buttons -->
                             <th:block th:if="${posts.page > 3}">
-                                <a class="page-number" th:href="@{'/search?page=1&size=' + ${size} + '&title=' + ${title}}">
+                                <a class="page-number" th:href="@{'/search?page=1&size=' + ${size} + '&title=' + ${title} + '&type=' + ${type}}">
                                     <li th:text="1"></li>
                                 </a>
                                 <li th:if="${posts.page != 4}">…</li>
@@ -54,7 +62,7 @@
                             <th:block th:each="index : ${#numbers.sequence(posts.page - 2, posts.page + 2)}">
                                 <li class="active" th:if="${posts.page == index}" th:text="${posts.page}"></li>
                                 <a th:unless="${posts.page == index}" th:if="${index > 0 && index <= T(java.lang.Math).ceil((posts.total + size - 1) / size)}"
-                                   th:href="@{'/search?page=' + ${index} + '&size=' + ${size} + '&title=' + ${title}}">
+                                   th:href="@{'/search?page=' + ${index} + '&size=' + ${size} + '&title=' + ${title} + '&type=' + ${type}}">
                                     <li th:text="${index}"></li>
                                 </a>
                             </th:block>
@@ -63,14 +71,14 @@
                                 <li th:if="${T(java.lang.Math).ceil((posts.total + size - 1) / size) - posts.page != 3}">…</li>
 
                                 <th:block th:with="totalPages=${(T(java.lang.Math).ceil((posts.total + size - 1) / size)).intValue()}">
-                                    <a th:href="@{'/search?page=' + ${totalPages} + '&size=' + ${size} + '&title=' + ${title}}">
+                                    <a th:href="@{'/search?page=' + ${totalPages} + '&size=' + ${size} + '&title=' + ${title} + '&type=' + ${type}}">
                                         <li th:text="${totalPages}"></li>
                                     </a>
                                 </th:block>
 
                             </th:block>
 
-                            <a th:if="${posts.page < T(java.lang.Math).ceil((posts.total + size - 1) / size)}" th:href="@{'/search?page=' + (${posts.page} + 1) + '&size=' + ${size} + '&title=' + ${title}}">
+                            <a th:if="${posts.page < T(java.lang.Math).ceil((posts.total + size - 1) / size)}" th:href="@{'/search?page=' + (${posts.page} + 1) + '&size=' + ${size} + '&title=' + ${title} + '&type=' + ${type}}">
                                 <li class="text-ob-bright">以往
                                     <svg class="svg-icon">
                                         <use href="#icon-arrow-right" fill="currentColor" stroke="var(--background-primary)"></use>
@@ -83,12 +91,28 @@
             </div>
         </div>
     </div>
+
     <script>
         // Get the URL parameters
         const urlParams = new URLSearchParams(window.location.search);
-        const titleParam = urlParams.get('title');
+        const typeParam = urlParams.get('type');
+        const searchBox = document.getElementById('search-box');
+        const breadcrumbTitle = document.getElementById('breadcrumb-title');
+        const pageTitle = document.getElementById('page-title');
+
+        // Check the type parameter and display the appropriate content
+        if (typeParam === 'hot') {
+            searchBox.style.display = 'none';
+            breadcrumbTitle.textContent = '热门影片';
+            pageTitle.textContent = '热门影片';
+        } else if (typeParam === 'search') {
+            searchBox.style.display = 'flex';
+            breadcrumbTitle.textContent = '搜索';
+            pageTitle.textContent = '搜索';
+        }
 
         // Set the value of the search input if the title parameter exists
+        const titleParam = urlParams.get('title');
         const searchInput = document.getElementById('search-input');
         if (titleParam) {
             searchInput.value = titleParam;
@@ -98,13 +122,14 @@
         searchInput.addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
                 const query = e.target.value;
-                window.location.href = `/search?title=${encodeURIComponent(query)}&page=1&size=12`;
+                window.location.href = `/search?title=${encodeURIComponent(query)}&page=1&size=12&type=${typeParam}`;
             }
         });
+
         const searchButton = document.getElementById('search-button');
         searchButton.addEventListener('click', function () {
             const query = searchInput.value;
-            window.location.href = `/search?title=${encodeURIComponent(query)}&page=1&size=12`;
+            window.location.href = `/search?title=${encodeURIComponent(query)}&page=1&size=12&type=${typeParam}`;
         });
     </script>
     <style>
@@ -134,13 +159,5 @@
             }
         }
     </style>
-
-    <ul id="post-cols">
-        <th:block th:each="post : ${posts.items}">
-            <th:block th:replace="~{macro/post-card :: post-card(${post.spec.pinned},${post})}"/>
-        </th:block>
-    </ul>
 </th:block>
-
-
 </html>

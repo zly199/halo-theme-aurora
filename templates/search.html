@@ -24,12 +24,12 @@
                     搜索
                 </button>
             </div>
-            <div th:if="${size != '' and page != ''}" th:with="page=${param.page != null ? T(java.lang.Integer).parseInt(param.page) : 1},
+            <div th:if="${type != ''}" th:with="page=${param.page != null ? T(java.lang.Integer).parseInt(param.page) : 1},
               size=${param.size != null && param.size.size() > 0 ? (T(java.lang.Integer).parseInt(param.size[0]) > 12 ? 12 : T(java.lang.Integer).parseInt(param.size[0])) : 12},
               title=${param.title != null && param.title.size() > 0 ? param.title[0] : ''},
               type=${param.type != null && param.type.size() > 0 ? param.type[0] : 'search'}">
 
-                <div th:if="${size != '' and page != ''}"
+                <div th:if="${type == 'hot' or (type == 'search' and title != '')}"
                      th:with="posts = ${type == 'hot' ? postFinder.list({page: page, size: size, sort: {'stats.visit,desc'}}) : postFinder.listByTitle(page, size, title)}">
                     <div th:if="${posts.total == 0}" style="text-align: center;">
                         <p><strong>没有找到相关内容.</strong></p>

@@ -5,6 +5,13 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            var pathSegments = window.location.pathname.split('/');
+            if (!pathSegments.includes('page')) {
+                //remove display = none
+                document.getElementById('main-rec').style.display = 'block';
+                return;
+            }
+
             var showMoreBtn = document.getElementById('show-more-btn');
             var maxItemsToShow = window.innerWidth < 768 ? 4 : (window.innerWidth < 1024 ? 3 : 4);
             var currentBatchStart = 0;
@@ -98,7 +105,7 @@
 
     </style>
 
-    <div>
+    <div id="main-rec" style="display: none">
         <div class="title-container">
             <p id="article-list"
                class="relative opacity-90 flex items-center pb-2 mb-8 text-3xl text-ob-bright uppercase">

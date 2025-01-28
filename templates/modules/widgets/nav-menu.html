@@ -1,7 +1,20 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <th:block th:fragment="nav-menu">
-    <nav class="menus items-center flex-1 hidden lg:flex">
+    <script>
+        function updateNavMenuVisibility() {
+            const navMenu = document.getElementById('nav-menu');
+            if (window.innerWidth < 640) {
+                navMenu.classList.add('hidden');
+            } else {
+                navMenu.classList.remove('hidden');
+            }
+        }
+
+        window.addEventListener('resize', updateNavMenuVisibility);
+        window.addEventListener('load', updateNavMenuVisibility);
+    </script>
+    <nav id="nav-menu" class="menus items-center flex-1 lg:flex">
         <ul th:with="menu = ${#strings.isEmpty(theme.config.nav.menu) ? menuFinder.getPrimary() : menuFinder.getByName(theme.config.nav.menu)}"
             class="flex flex-row list-none px-6 text-white">
             <li th:each="menuItem : ${menu.menuItems}" th:onclick="go([[${menuItem.status.href}]])"
@@ -35,6 +48,5 @@
             display: flex;
         }
     </style>
-
 </th:block>
 </html>

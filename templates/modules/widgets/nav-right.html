@@ -18,7 +18,7 @@
                     <li><a href="/uc" style="display: block; padding: 8px 16px; text-decoration: none; color: #000;">个人中心</a></li>
                     <li><a href="/search?page=1&size=12&title=&type=hot" style="display: block; padding: 8px 16px; text-decoration: none; color: #000;">热门影片</a></li>
                     <li><a href="#" id="theme-toggle-link" style="display: block; padding: 8px 16px; text-decoration: none; color: #000;">夜间模式</a></li>
-                    <li th:each="menuItem : ${menu.menuItems}" th:if="${!#strings.contains(menuItem.status.href, '/signup')}">
+                    <li th:each="menuItem : ${menu.menuItems}">
                         <a th:href="@{${menuItem.status.href}}" style="display: block; padding: 8px 16px; text-decoration: none; color: #000;" th:text="${menuItem.status.displayName}"></a>
                     </li>
                 </ul>

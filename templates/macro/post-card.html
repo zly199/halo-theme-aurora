@@ -85,6 +85,10 @@
         }
 
         function pauseVideo(element) {
+            if (window.innerWidth <= 1024) {
+                // Do not pause on mobile devices
+                return;
+            }
             const video = element.querySelector('video');
             video.pause();
 

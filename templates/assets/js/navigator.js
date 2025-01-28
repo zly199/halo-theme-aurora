@@ -1,8 +1,8 @@
 let scrollTimer;
 document.addEventListener("scroll", () => {
-    let navigator_class = document.getElementById('Ob-Navigator').classList;
-    navigator_class.remove('Ob-Navigator--open')
-    navigator_class.add('Ob-Navigator--scrolling')
+    // let navigator_class = document.getElementById('Ob-Navigator').classList;
+    // navigator_class.remove('Ob-Navigator--open')
+    // navigator_class.add('Ob-Navigator--scrolling')
     let returnTop = document.getElementById('returnTop')
     let scrollPercent = document.getElementById('scrollPercent')
     let scrollSvg1 = document.getElementById('scrollSvg1')
@@ -22,9 +22,9 @@ document.addEventListener("scroll", () => {
         scrollSvg1.style.display = 'block'
     }
     clearTimeout(scrollTimer);
-    scrollTimer = setTimeout(() => {
-        navigator_class.remove('Ob-Navigator--scrolling')
-    }, 300);
+    // scrollTimer = setTimeout(() => {
+    //     navigator_class.remove('Ob-Navigator--scrolling')
+    // }, 300);
 });
 
 function returnTop() {

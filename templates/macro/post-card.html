@@ -1,23 +1,20 @@
-<style>
-    .article-content p {
-        display: -webkit-box !important;
-        -webkit-line-clamp: 2 !important; /* 限制为 2 行 */
-        -webkit-box-orient: vertical !important;
-        overflow: hidden !important; /* 隐藏溢出内容 */
-        text-overflow: ellipsis !important; /* 显示省略号 */
-        max-width: 100% !important; /* 确保不会超出容器 */
-        width: 100% !important; /* 确保占满容器宽度 */
-        white-space: normal !important; /* 确保文本正确换行 */
-    }
-
-    .article-content {
-        width: 100%; /* Ensure the parent container has a defined width */
-    }
-</style>
-
 <th:block th:fragment="post-card(feature,post)">
+    <style>
+        #imgHref:hover {
+            opacity: 1;
+        }
+        .article-thumbnail{
+            height:230%;
+        }
+
+    </style>
     <li class="article-container"
-        th:with="default_img=${#strings.contains(theme.config.article.default_img,'http') ? ((#strings.contains(theme.config.article.default_img,'?') ? theme.config.article.default_img : theme.config.article.default_img+'?')+','+post.spec.title): theme.config.article.default_img}">
+        th:if="${post != null}"
+        th:with="default_img=${#strings.contains(theme.config.article.default_img,'http') ? ((#strings.contains(theme.config.article.default_img,'?') ? theme.config.article.default_img : theme.config.article.default_img+'?')+','+post.spec.title): theme.config.article.default_img}"
+        th:data-cover-gif="${post.metadata.annotations['coverGIf']}"
+        onmouseenter="loadAndPlayVideo(this)"
+        onmouseleave="pauseVideo(this)">
+
         <span th:if="${feature}" class="article-tag">
               <b>
                 <svg class="svg-icon">
@@ -26,10 +23,14 @@
                 </use></svg> 推荐</b>
         </span>
         <div class="article">
-            <a th:href="@{${post.status.permalink}}">
+            <a id="imgHref" th:href="@{${post.status.permalink}}">
                 <div class="article-thumbnail">
                     <img alt="" lazy="loading"
                          th:src="${#strings.isEmpty(post.spec.cover) ? default_img : post.spec.cover} ">
+                    <video class="artile-video" muted playsinline style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 50;" loop>
+                        <source src="" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
                     <span class="thumbnail-screen"
                           style="background: linear-gradient(130deg, rgb(36, 198, 220), rgb(84, 51, 255) 41.07%, rgb(255, 0, 153) 76.05%);"></span>
                 </div>
@@ -43,19 +44,62 @@
                 <p th:text="${post.status.excerpt}" class="article-content" style="display: none"></p>
                 <div class="article-footer" th:with="owner=${post.owner}" style="display: flex; justify-content: space-between;">
                     <div class="flex flex-row items-center">
-                        <span>
-                            <th:block th:if="${not #lists.isEmpty(post.categories)}" th:each="category,stat : ${post.categories}">
-                                <a th:if="${stat.index}<=2" th:href="@{${category.status.permalink}}">
-                                    <b>[[${category.spec.displayName}]]</b>
-                                </a>
-                            </th:block>
-                        </span>
+                    <span>
+                        <th:block th:if="${not #lists.isEmpty(post.categories)}" th:each="category,stat : ${post.categories}">
+                            <a th:if="${stat.index}<=2" th:href="@{${category.status.permalink}}">
+                                <b>[[${category.spec.displayName}]]</b>
+                            </a>
+                        </th:block>
+                    </span>
                     </div>
                     <span class="text-ob-dim">
-                        [[${#dates.format(post.spec.publishTime, 'yyyy-MM-dd')}]]
-                    </span>
+                    [[${#dates.format(post.spec.publishTime, 'yyyy-MM-dd')}]]
+                </span>
                 </div>
             </div>
         </div>
     </li>
+    <script>
+        function loadAndPlayVideo(element) {
+            const video = element.querySelector('video');
+            const source = video.querySelector('source');
+            const coverGif = element.getAttribute('data-cover-gif');
+
+            if (coverGif) {
+                if (source.src !== coverGif) {
+                    source.src = coverGif;
+                    video.load();
+                }
+                video.play();
+                // Apply hover styles
+                video.style.display = 'block';
+                const img = element.querySelector('img');
+                if (img) {
+                    img.style.display = 'none';
+                }
+                const thumbnailScreen = element.querySelector('.thumbnail-screen');
+                if (thumbnailScreen) {
+                    thumbnailScreen.style.display = 'none';
+                }
+            }
+
+
+        }
+
+        function pauseVideo(element) {
+            const video = element.querySelector('video');
+            video.pause();
+
+            // Revert hover styles
+            video.style.display = 'none';
+            const img = element.querySelector('img');
+            if (img) {
+                img.style.display = 'block';
+            }
+            const thumbnailScreen = element.querySelector('.thumbnail-screen');
+            if (thumbnailScreen) {
+                thumbnailScreen.style.display = 'block';
+            }
+        }
+    </script>
 </th:block>

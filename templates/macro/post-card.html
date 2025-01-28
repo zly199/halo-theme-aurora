@@ -82,8 +82,6 @@
                     thumbnailScreen.style.display = 'none';
                 }
             }
-
-
         }
 
         function pauseVideo(element) {
@@ -101,5 +99,31 @@
                 thumbnailScreen.style.display = 'block';
             }
         }
+
+        document.querySelectorAll('.article-container').forEach(container => {
+            let clickedOnce = false;
+            container.addEventListener('mouseenter', () => loadAndPlayVideo(container));
+            container.addEventListener('mouseleave', () => pauseVideo(container));
+            container.addEventListener('click', (event) => {
+                const coverGif = container.getAttribute('data-cover-gif');
+                if (window.innerWidth <= 1024) { // Check if it's a mobile device
+                    if (!clickedOnce && coverGif) {
+                        event.preventDefault();
+                        loadAndPlayVideo(container);
+                        clickedOnce = true;
+                    } else {
+                        const link = container.querySelector('a');
+                        if (link) {
+                            window.location.href = link.href;
+                        }
+                    }
+                } else {
+                    const link = container.querySelector('a');
+                    if (link) {
+                        window.location.href = link.href;
+                    }
+                }
+            });
+        });
     </script>
 </th:block>

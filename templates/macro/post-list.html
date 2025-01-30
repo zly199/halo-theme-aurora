@@ -17,7 +17,7 @@
             }
         </style>
         <script type="text/javascript" th:src="@{/assets/js/navigator.js}"></script>
-        <ul id="post_tab" th:if="${type=='tag'}" th:with="tags = ${tagFinder.listAll()}" class="tab expanded-tab"
+        <ul id="post_tab" th:if="${type=='tag'}" th:with="tags = ${tagFinder.listAll()}" class="tab"
             style="z-index: 9;">
             <li onclick="javascript:window.location.href='/#article-list'" th:classappend="${tag==null}?'active':''">
                 <span class="tab-span first-tab" style="">全部</span>
@@ -42,7 +42,7 @@
                     th:text="${categoryItem.status.postCount}"></b>
             </li>
         </ul>
-        <span onclick="expandHandler()" id="expander" class="tab-expander expanded" style="z-index: 999;">
+        <span onclick="expandHandler()" id="expander" class="tab-expander" style="z-index: 999;">
             <svg class="svg-icon">
                 <use href="#icon-chevron" fill="currentColor"
                      stroke="var(--background-primary)"></use>
@@ -69,12 +69,6 @@
                 window.location.href = to;
             }
 
-            document.addEventListener('DOMContentLoaded', () => {
-                const url = window.location.href;
-                if (tab && (!url.includes('/page/') || url.includes('/page/1'))) {
-                    tab.classList.add('expanded-tab'); // 确保初始展开
-                }
-            });
         </script>
         <ul id="post-cols" th:class="${'grid grid-cols-'+colNum+' gap-8'}">
             <th:block th:each="post : ${posts.items}">

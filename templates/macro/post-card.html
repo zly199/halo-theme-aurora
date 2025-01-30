@@ -185,11 +185,15 @@
                         }
                     }
                 }
-                // PC端点击直接跳转
+                // PC端点击逻辑
                 else {
                     const link = container.querySelector('a');
                     if (link) {
-                        window.location.href = link.href;
+                        if (event.ctrlKey) {
+                            window.open(link.href, '_blank');
+                        } else {
+                            window.location.href = link.href;
+                        }
                     }
                 }
             });

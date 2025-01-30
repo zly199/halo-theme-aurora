@@ -54,6 +54,12 @@
                                 <span id="upvote-id" class="opacity-70" th:text="${post.stats?.upvote ?: 0}"></span>
                                 <span id="upvote-text" style="font-size: 0.9em;">点个赞</span>
                             </span>
+                            <!-- 收藏按钮 -->
+                            <span id="favorite-btn" style="justify-content: flex-end; color: white; cursor: pointer; display: flex; align-items: center; gap: 4px; margin-left: 10px;"
+                                  th:onclick="handleFavorite([[${post.metadata.name}]])">
+                                <i class="roozenfont roozen-heartbeat" id="favorite-icon"></i>
+                                <span id="favorite-text" style="font-size: 0.9em;">收藏</span>
+                            </span>
                         </div>
                         <div id="upvote-warning" style="color: white; display: none; font-size: 0.9em; margin-top: 4px;">[点了]</div>
                     </div>
@@ -196,10 +202,71 @@
             xhr.send(JSON.stringify(postData));
         }
 
+        function getIsFavorited(name) {
+            console.log("getIsFavorited", name);
+            //get /apis/api.halo.run/v1alpha1/trackers/{name}/getFavorite
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "/apis/api.halo.run/v1alpha1/trackers/" + name + "/getFavorite", true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            //如果收藏了，显示红色
+            xhr.onreadystatechange = function () {
+                console.log("xhr.readyState", xhr.readyState);
+                if (xhr.readyState === 4) {
+                    console.log("xhr.status", xhr.status);
+                    var favoriteIcon = document.getElementById("favorite-icon");
+                    var favoriteText = document.getElementById("favorite-text");
+                    if (xhr.status === 200) {
+                        console.log("xhr.responseText", xhr.responseText);
+                        var isFavorited = JSON.parse(xhr.responseText);
+
+                        if (isFavorited) {
+                            favoriteIcon.style.color = "red";
+                            favoriteText.textContent = "已收藏";
+                        } else {
+                            favoriteIcon.style.color = "white";
+                            favoriteText.textContent = "收藏";
+                        }
+                    } else {
+                        favoriteIcon.style.color = "white";
+                        favoriteText.textContent = "收藏";
+                    }
+                }
+            };
+            xhr.send(); // 发送请求
+
+        }
+
+        function handleFavorite(name) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/apis/api.halo.run/v1alpha1/trackers/favorite", true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        // 获取最新是否收藏
+                        getIsFavorited(name);
+                    } else {
+                        alert("网络错误，请稍后再试。");
+                        console.error("收藏请求失败：", xhr.statusText);
+                    }
+                }
+            };
+
+            var postData = {
+                group: "content.halo.run",    // 根据实际情况调整
+                plural: "posts",  // 根据实际情况调整
+                name: name
+            };
+
+            xhr.send(JSON.stringify(postData));
+        }
+
         // 初始化按钮状态
         document.addEventListener("DOMContentLoaded", function () {
             var postName = "[[${post.metadata.name}]]"; // 获取当前文章的 name
             updateUpvoteDisplay(postName);
+            getIsFavorited(postName); // 调用 getIsFavorited 方法
         });
     </script>
 </th:block>

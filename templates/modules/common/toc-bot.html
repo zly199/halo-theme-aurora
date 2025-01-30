@@ -15,7 +15,10 @@
             const headers = postContent.querySelectorAll('h1,h2,h3,h4,h5,h6');
             // 没有 toc 目录，则直接移除
             if (headers.length === 0) {
-                document.getElementById("card-toc").remove();
+                let x = document.getElementById("card-toc");
+                if (x) {
+                    x.remove();
+                }
             } else {
                 tocbot.init({
                     tocSelector: '.toc',

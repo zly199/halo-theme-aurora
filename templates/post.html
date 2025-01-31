@@ -187,7 +187,7 @@
                         // 更新按钮样式
                         updateUpvoteDisplay(name);
                     } else {
-                        alert("网络错误，请稍后再试。");
+                        alert("请先登录!");
                         console.error("点赞请求失败：", xhr.statusText);
                     }
                 }
@@ -247,7 +247,7 @@
                         // 获取最新是否收藏
                         getIsFavorited(name);
                     } else {
-                        alert("网络错误，请稍后再试。");
+                        alert("请先登录!");
                         console.error("收藏请求失败：", xhr.statusText);
                     }
                 }

@@ -14,7 +14,7 @@
         window.addEventListener('resize', updateNavMenuVisibility);
         window.addEventListener('load', updateNavMenuVisibility);
     </script>
-    <nav id="nav-menu" class="menus items-center flex-1 lg:flex">
+    <nav id="nav-menu" class="menus items-center hidden flex-1 lg:flex">
         <ul th:with="menu = ${#strings.isEmpty(theme.config.nav.menu) ? menuFinder.getPrimary() : menuFinder.getByName(theme.config.nav.menu)}"
             class="flex flex-row list-none px-6 text-white">
             <li th:each="menuItem : ${menu.menuItems}" th:onclick="go([[${menuItem.status.href}]])"

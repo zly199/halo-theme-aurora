@@ -55,11 +55,11 @@
                                 <span id="upvote-text" style="font-size: 0.9em;">点个赞</span>
                             </span>
                             <!-- 收藏按钮 -->
-<!--                            <span id="favorite-btn" style="justify-content: flex-end; color: white; cursor: pointer; display: flex; align-items: center; gap: 4px; margin-left: 10px;"-->
-<!--                                  th:onclick="handleFavorite([[${post.metadata.name}]])">-->
-<!--                                <i class="roozenfont roozen-heartbeat" id="favorite-icon"></i>-->
-<!--                                <span id="favorite-text" style="font-size: 0.9em;">收藏</span>-->
-<!--                            </span>-->
+                            <span id="favorite-btn" style="justify-content: flex-end; color: white; cursor: pointer; display: flex; align-items: center; gap: 4px; margin-left: 10px;"
+                                  th:onclick="handleFavorite([[${post.metadata.name}]])">
+                                <i class="roozenfont roozen-heartbeat" id="favorite-icon"></i>
+                                <span id="favorite-text" style="font-size: 0.9em;">收藏</span>
+                            </span>
                         </div>
                         <div id="upvote-warning" style="color: white; display: none; font-size: 0.9em; margin-top: 4px;">[点了]</div>
                     </div>
@@ -266,7 +266,7 @@
         document.addEventListener("DOMContentLoaded", function () {
             var postName = "[[${post.metadata.name}]]"; // 获取当前文章的 name
             updateUpvoteDisplay(postName);
-           // getIsFavorited(postName); // 调用 getIsFavorited 方法
+            getIsFavorited(postName); // 调用 getIsFavorited 方法
         });
     </script>
 </th:block>

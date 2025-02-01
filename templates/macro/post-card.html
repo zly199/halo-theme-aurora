@@ -99,38 +99,44 @@
             const coverGif = element.getAttribute('data-cover-gif');
             const img = element.querySelector('img');
 
-            // 如果已加载过，则直接播放并显示
+            // If already loaded, play and show
             if (video.dataset.loaded === 'true') {
                 video.dataset.playing = 'true';
-                video.play();
-                video.style.display = 'block'; // 直接显示
+                video.play().catch(error => {
+                    if (error.name !== 'AbortError') {
+                        console.error('Error playing video:', error);
+                    }
+                });
+                video.style.display = 'block';
                 if (img) img.style.display = 'none';
                 return;
             }
 
-            // 第一次加载
+            // First time load
             if (coverGif && source.src !== coverGif) {
                 source.src = coverGif;
                 video.load();
             }
 
-            // 使用 canplay 事件，确保至少解码了一帧才显示
+            // Ensure at least one frame is decoded before showing
             const onCanPlay = () => {
                 video.removeEventListener('canplay', onCanPlay);
-                // 如果用户依然想播放(鼠标没离开)才显示
                 if (video.dataset.playing === 'true') {
                     video.style.display = 'block';
-                    video.dataset.loaded = 'true'; // 只标记一次
+                    video.dataset.loaded = 'true';
                     if (img) img.style.display = 'none';
                 }
             };
             video.__onCanPlay = onCanPlay;
             video.addEventListener('canplay', onCanPlay);
 
-            // 标记正在播放
+            // Mark as playing
             video.dataset.playing = 'true';
-            video.play();
-
+            video.play().catch(error => {
+                if (error.name !== 'AbortError') {
+                    console.error('Error playing video:', error);
+                }
+            });
         }
 
         // 鼠标离开后暂停并隐藏视频

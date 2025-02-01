@@ -120,6 +120,7 @@
                 // 如果用户依然想播放(鼠标没离开)才显示
                 if (video.dataset.playing === 'true') {
                     video.style.display = 'block';
+                    video.dataset.loaded = 'true'; // 只标记一次
                     if (img) img.style.display = 'none';
                 }
             };
@@ -129,7 +130,7 @@
             // 标记正在播放
             video.dataset.playing = 'true';
             video.play();
-            video.dataset.loaded = 'true'; // 只标记一次
+
         }
 
         // 鼠标离开后暂停并隐藏视频

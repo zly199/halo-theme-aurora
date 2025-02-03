@@ -90,70 +90,68 @@
         </div>
     </li>
 
-    <!-- JS逻辑：hover播放、离开暂停、移动端点击处理、只有canplay后才显示视频 -->
+    <!-- JS逻辑：hover时加载视频、离开暂停、移动端点击处理 -->
     <script>
-        // 悬停/点击时加载并播放
+        // 悬停/点击时加载并播放视频，采用 fetch 获取视频 Blob，确保仅在 hover 时加载
         function loadAndPlayVideo(element) {
             const video = element.querySelector('video');
             const source = video.querySelector('source');
             const coverGif = element.getAttribute('data-cover-gif');
             const img = element.querySelector('img');
 
-            // If already loaded, play and show
+            // 如果已加载过，直接播放
             if (video.dataset.loaded === 'true') {
                 video.dataset.playing = 'true';
+                video.style.display = 'block';
                 video.play().catch(error => {
                     if (error.name !== 'AbortError') {
                         console.error('Error playing video:', error);
                     }
                 });
-                video.style.display = 'block';
                 if (img) img.style.display = 'none';
                 return;
             }
 
-            // First time load
-            if (coverGif && source.src !== coverGif) {
-                source.src = coverGif;
-                video.load();
+            // 避免重复请求
+            if (video.dataset.fetching === 'true') return;
+            video.dataset.fetching = 'true';
+
+            // 仅在 hover 时发起 fetch 请求，加载视频 Blob
+            if (coverGif) {
+                fetch(coverGif)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('网络响应错误');
+                        }
+                        return response.blob();
+                    })
+                    .then(blob => {
+                        const blobUrl = URL.createObjectURL(blob);
+                        source.src = blobUrl;
+                        video.load();
+                        video.dataset.loaded = 'true';
+                        video.dataset.playing = 'true';
+                        video.style.display = 'block';
+                        video.play().catch(error => {
+                            if (error.name !== 'AbortError') {
+                                console.error('Error playing video:', error);
+                            }
+                        });
+                        if (img) img.style.display = 'none';
+                    })
+                    .catch(error => {
+                        console.error('加载视频错误:', error);
+                    });
             }
-
-            // Ensure at least one frame is decoded before showing
-            const onCanPlay = () => {
-                video.removeEventListener('canplay', onCanPlay);
-                if (video.dataset.playing === 'true') {
-                    video.style.display = 'block';
-                    video.dataset.loaded = 'true';
-                    if (img) img.style.display = 'none';
-                }
-            };
-            video.__onCanPlay = onCanPlay;
-            video.addEventListener('canplay', onCanPlay);
-
-            // Mark as playing
-            video.dataset.playing = 'true';
-            video.play().catch(error => {
-                if (error.name !== 'AbortError') {
-                    console.error('Error playing video:', error);
-                }
-            });
         }
 
-        // 鼠标离开后暂停并隐藏视频
+        // 鼠标离开后暂停视频并恢复图片显示（移动端不执行此逻辑）
         function pauseVideo(element) {
             if (window.innerWidth <= 1024) {
-                // 移动端不做悬停暂停
                 return;
             }
             const video = element.querySelector('video');
             const img = element.querySelector('img');
-
-            // 若还没触发 canplay 就离开，需要移除监听
-            if (video.__onCanPlay) {
-                video.removeEventListener('canplay', video.__onCanPlay);
-                delete video.__onCanPlay;
-            }
-
             video.pause();
             video.removeAttribute('data-playing');
             video.style.display = 'none';
@@ -165,7 +163,7 @@
         document.querySelectorAll('.article-container').forEach(container => {
             let clickedOnce = false;
 
-            // PC端鼠标悬停
+            // PC端：鼠标悬停加载播放，离开暂停
             container.addEventListener('mouseenter', () => {
                 loadAndPlayVideo(container);
             });
@@ -173,26 +171,24 @@
                 pauseVideo(container);
             });
 
-            // 移动端或PC端点击
+            // 移动端或PC端点击处理
             container.addEventListener('click', (event) => {
                 const coverGif = container.getAttribute('data-cover-gif');
 
-                // 移动端逻辑
+                // 移动端逻辑：第一次点击播放视频，第二次点击跳转链接
                 if (window.innerWidth <= 1024) {
-                    // 第一次点击只播放
                     if (!clickedOnce && coverGif) {
                         event.preventDefault(); // 阻止立即跳转
                         loadAndPlayVideo(container);
                         clickedOnce = true;
                     } else {
-                        // 第二次点击才跳转
                         const link = container.querySelector('a');
                         if (link) {
                             window.location.href = link.href;
                         }
                     }
                 }
-                // PC端点击逻辑
+                // PC端点击直接跳转链接
                 else {
                     const link = container.querySelector('a');
                     if (link) {

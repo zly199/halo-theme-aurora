@@ -118,6 +118,11 @@
             searchInput.value = titleParam;
         }
 
+        // Give focus to the search input if the type is 'search'
+        if (typeParam === 'search') {
+            searchInput.focus();
+        }
+
         // Add event listener for the Enter key
         searchInput.addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {

@@ -59,8 +59,8 @@
                     <img alt=""
                          lazy="loading"
                          th:src="${#strings.isEmpty(post.spec.cover) ? default_img : post.spec.cover}"/>
-                    <i class="roozenfont roozen-fire" style="color: #ff6666; position: absolute; top: 10px; right: 10px; z-index: 20;"
-                       th:if="${(post.stats?.upvote ?: 0) > 2 or (post.stats?.comment ?: 0) > 2 or (post.stats?.visit ?: 0) > 30}"></i>
+<!--                    <i class="roozenfont roozen-fire" style="color: #ff6666; position: absolute; top: 10px; right: 10px; z-index: 20;"-->
+<!--                       th:if="${(post.stats?.upvote ?: 0) > 2 or (post.stats?.comment ?: 0) > 2 or (post.stats?.visit ?: 0) > 30}"></i>-->
 
                     <!-- 关键：video preload="none" + display:none，避免先行加载和白屏 -->
                     <video class="artile-video"

@@ -5,7 +5,7 @@
 
     @param  pageInfo   Halo类型UrlContextListResult<ListedPostVo>
  -->
-<div class="paginator" th:fragment="page(path,pageInfo)">
+<div class="paginator" th:fragment="page(path,pageInfo)" style="z-index: 3;">
     <ul>
         <a th:if="${pageInfo.hasPrevious}" th:href="${pageInfo.prevUrl != '/' ? pageInfo.prevUrl : '/page/1'}">
             <li class="text-ob-bright">

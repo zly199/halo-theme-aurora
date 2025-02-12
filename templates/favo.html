@@ -35,7 +35,7 @@
                                     <svg class="svg-icon">
                                         <use href="#icon-arrow-left" fill="currentColor" stroke="var(--background-primary)"></use>
                                     </svg>
-                                    上一页
+                                    上页
                                 </li>
                             </a>
 
@@ -68,7 +68,7 @@
 
                             <a th:if="${posts.page < T(java.lang.Math).ceil((posts.total + size - 1) / size)}"
                                th:href="@{'/favo?page=' + (${posts.page} + 1) + '&size=' + ${size}}">
-                                <li class="text-ob-bright">上一页
+                                <li class="text-ob-bright">下页
                                     <svg class="svg-icon">
                                         <use href="#icon-arrow-right" fill="currentColor" stroke="var(--background-primary)"></use>
                                     </svg>

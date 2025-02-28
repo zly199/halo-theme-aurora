@@ -17,6 +17,9 @@
     <nav id="nav-menu" class="menus items-center hidden flex-1 lg:flex">
         <ul th:with="menu = ${#strings.isEmpty(theme.config.nav.menu) ? menuFinder.getPrimary() : menuFinder.getByName(theme.config.nav.menu)}"
             class="flex flex-row list-none px-6 text-white">
+            <li class="not-italic font-medium text-xs h-full relative flex flex-col items-center justify-center cursor-pointer text-center py-4 px-2">
+                <a href="/signup" class="nav-link text-sm block px-1.5 py-0.5 rounded-md relative uppercase">注册</a>
+            </li>
             <li th:each="menuItem : ${menu.menuItems}" th:onclick="go([[${menuItem.status.href}]])"
                 class="not-italic font-medium text-xs h-full relative flex flex-col items-center justify-center cursor-pointer text-center py-4 px-2">
                 <div class="nav-link text-sm block px-1.5 py-0.5 rounded-md relative uppercase cursor-pointer"
